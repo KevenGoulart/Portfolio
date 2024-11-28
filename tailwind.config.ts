@@ -12,6 +12,9 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        baloo: ['var(--font-baloo)', 'sans-serif'],
+      },
     },
   },
   plugins: [],
