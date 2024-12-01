@@ -15,6 +15,8 @@ type TracksData = {
 
 export default async function TopTracks(){
     const tracks:TracksData = await getTopTracks();
+
+    console.log(tracks)
     return (
       <>
         {tracks

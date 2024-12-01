@@ -8,7 +8,7 @@ export default function Home() {
       <div className="flex justify-center mt-4">
         <CurrentlyPlaying />
       </div>
-      <div className="flex flex-wrap m-20">
+      <div className="float-right mr-8">
         <TopTracks />
     </div>
     </div>

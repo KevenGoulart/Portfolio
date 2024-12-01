@@ -1,4 +1,3 @@
-import { unstable_noStore } from "next/cache";
 import querystring from "querystring";
 
 const client_id = process.env.SPOTIFY_CLIENT_ID;
@@ -10,6 +9,7 @@ const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 
 const getAccessToken = async () => {
   const response = await fetch(TOKEN_ENDPOINT, {
+    cache: 'no-cache',
     method: "POST",
     headers: {
       Authorization: `Basic ${basic}`,
@@ -25,7 +25,7 @@ const getAccessToken = async () => {
   return response.json();
 }
 
-const TOP_TRACKS_ENDPOINT = `https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=50`;
+const TOP_TRACKS_ENDPOINT = `https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=5`;
 const CURRENTLY_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-playing`;
 
 export const fetchTopTracks = async () => {
@@ -47,6 +47,7 @@ export const fetchCurrentlyPlaying = async () => {
   const { access_token } = await getAccessToken();
 
   const currentTrack = await fetch(CURRENTLY_PLAYING_ENDPOINT, {
+    cache: 'no-cache',
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
@@ -54,17 +55,13 @@ export const fetchCurrentlyPlaying = async () => {
     .then((data) => data.json())
     .catch((e) => console.log(e));
 
-  console.log(currentTrack);
   return currentTrack;
 };
 
 export async function getTopTracks() {
-    unstable_noStore()
   try {
-    //get your most listened-to tracks
     const {items} = await fetchTopTracks();
 
-    //format the JSON with map()
     const tracks = items?.map((track, index) => ({
       artist: track.artists.map((_artist) => _artist.name).join(", "),
       songUrl: track.external_urls.spotify,
@@ -79,7 +76,6 @@ export async function getTopTracks() {
 }
 
 export async function getCurrentlyPlaying() {
-  unstable_noStore();
   try {
     const currentTrack = await fetchCurrentlyPlaying();
     if (currentTrack?.item) {
@@ -91,7 +87,7 @@ export async function getCurrentlyPlaying() {
       };
       return track;
     } else {
-      return null; // No track is currently playing
+      return null;
     }
   } catch (e) {
     console.log(e);
