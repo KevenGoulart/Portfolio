@@ -9,7 +9,6 @@ const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 
 const getAccessToken = async () => {
   const response = await fetch(TOKEN_ENDPOINT, {
-    cache: 'no-cache',
     method: "POST",
     headers: {
       Authorization: `Basic ${basic}`,
@@ -20,8 +19,6 @@ const getAccessToken = async () => {
       refresh_token,
     }),
   });
-
-  console.log(response)
   return response.json();
 }
 
@@ -38,24 +35,7 @@ export const fetchTopTracks = async () => {
   })
     .then((data) => data.json())
     .catch((e) => console.log(e));
-
-    console.log(topTracks)
   return topTracks;
-};
-
-export const fetchCurrentlyPlaying = async () => {
-  const { access_token } = await getAccessToken();
-
-  const currentTrack = await fetch(CURRENTLY_PLAYING_ENDPOINT, {
-    cache: 'no-cache',
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-    },
-  })
-    .then((data) => data.json())
-    .catch((e) => console.log(e));
-
-  return currentTrack;
 };
 
 export async function getTopTracks() {
@@ -74,6 +54,20 @@ export async function getTopTracks() {
     console.log(e);
   }
 }
+
+export const fetchCurrentlyPlaying = async () => {
+  const { access_token } = await getAccessToken();
+
+  const currentTrack = await fetch(CURRENTLY_PLAYING_ENDPOINT, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  })
+    .then((data) => data.json())
+    .catch((e) => console.log(e));
+
+  return currentTrack;
+};
 
 export async function getCurrentlyPlaying() {
   try {
